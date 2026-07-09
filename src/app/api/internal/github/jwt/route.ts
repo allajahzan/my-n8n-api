@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       } else if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
         privateKey = privateKey.slice(1, -1);
       }
-      
+
       // Fix escaped newlines
       privateKey = privateKey.replace(/\\n/g, "\n");
     }
@@ -30,12 +30,12 @@ export async function POST(request: Request) {
     if (!appId || !privateKey) {
       return NextResponse.json(
         { error: "GitHub credentials not configured" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     const now = Math.floor(Date.now() / 1000);
-    
+
     const payload = {
       iat: now - 60,
       exp: now + 9 * 60,
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     console.error("Generate GitHub JWT error:", error);
     return NextResponse.json(
       { error: error.message || "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
