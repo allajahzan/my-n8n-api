@@ -13,7 +13,19 @@ export async function POST(request: Request) {
     }
 
     const appId = process.env.GITHUB_APP_ID;
-    const privateKey = process.env.GITHUB_PRIVATE_KEY?.replace(/\\n/g, "\n");
+    let privateKey = process.env.GITHUB_PRIVATE_KEY;
+
+    if (privateKey) {
+      // Remove surrounding quotes if accidentally included
+      if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = privateKey.slice(1, -1);
+      } else if (privateKey.startsWith("'") && privateKey.endsWith("'")) {
+        privateKey = privateKey.slice(1, -1);
+      }
+      
+      // Fix escaped newlines
+      privateKey = privateKey.replace(/\\n/g, "\n");
+    }
 
     if (!appId || !privateKey) {
       return NextResponse.json(
